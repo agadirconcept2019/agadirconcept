@@ -1,0 +1,63 @@
+version: 1
+content_types:
+  page:
+    label: Pages
+    slug_source: title
+    statuses: [draft, published, scheduled, archived]
+    fields:
+      - { key: title, type: string, required: true }
+      - { key: slug, type: string, required: true, unique: true }
+      - { key: template, type: enum, values: [default, landing, legal], required: true }
+      - { key: body_blocks, type: blocks, required: true }
+      - { key: seo_title, type: string, required: false }
+      - { key: seo_description, type: text, required: false }
+      - { key: published_at, type: datetime, required: false }
+  post:
+    label: Articles
+    slug_source: title
+    statuses: [draft, published, scheduled, archived]
+    fields:
+      - { key: title, type: string, required: true }
+      - { key: slug, type: string, required: true, unique: true }
+      - { key: excerpt, type: text, required: true }
+      - { key: body_blocks, type: blocks, required: true }
+      - { key: featured_media_id, type: relation, target: media_asset, required: false }
+      - { key: categories, type: string_array, required: false }
+      - { key: tags, type: string_array, required: false }
+      - { key: author_name, type: string, required: true }
+      - { key: published_at, type: datetime, required: false }
+  media_asset:
+    label: Media Library
+    statuses: [active, archived]
+    fields:
+      - { key: file_name, type: string, required: true }
+      - { key: file_path, type: string, required: true, unique: true }
+      - { key: media_type, type: enum, values: [image, pdf, video], required: true }
+      - { key: mime_type, type: string, required: true }
+      - { key: size_bytes, type: number, required: true }
+      - { key: alt_text, type: string, required: false }
+      - { key: title, type: string, required: false }
+      - { key: caption, type: text, required: false }
+      - { key: uploaded_at, type: datetime, required: true }
+  menu:
+    label: Menus
+    statuses: [active, archived]
+    fields:
+      - { key: name, type: string, required: true }
+      - { key: location, type: enum, values: [main, footer, legal], required: true }
+      - { key: items, type: menu_items, required: true }
+  site_setting:
+    label: Global Settings
+    statuses: [active]
+    fields:
+      - { key: group, type: enum, values: [identity, contact, seo, notifications, integration], required: true }
+      - { key: key, type: string, required: true }
+      - { key: value, type: json, required: true }
+  reusable_block:
+    label: Reusable Blocks
+    statuses: [draft, published, archived]
+    fields:
+      - { key: name, type: string, required: true }
+      - { key: block_type, type: enum, values: [hero, cta, faq, testimonials, logos, service_grid], required: true }
+      - { key: payload, type: json, required: true }
+      - { key: version, type: number, required: true }
