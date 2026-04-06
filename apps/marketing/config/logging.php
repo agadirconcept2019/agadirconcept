@@ -1,0 +1,21 @@
+<?php
+
+declare(strict_types=1);
+
+use Monolog\Handler\StreamHandler;
+
+return [
+    'default' => env('LOG_CHANNEL', 'stack'),
+    'channels' => [
+        'stack' => [
+            'driver' => 'stack',
+            'channels' => ['single'],
+        ],
+        'single' => [
+            'driver' => 'single',
+            'path' => storage_path('logs/laravel.log'),
+            'level' => env('LOG_LEVEL', 'debug'),
+            'handler' => StreamHandler::class,
+        ],
+    ],
+];
