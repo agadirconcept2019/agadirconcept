@@ -1,0 +1,32 @@
+version: 1
+source_system: marketing_site
+event_types:
+  - contact_submitted
+  - quote_requested
+  - website_brief_submitted
+  - webapp_brief_submitted
+  - domain_hosting_request_submitted
+  - audit_request_submitted
+  - service_order_created
+integration_statuses:
+  - pending
+  - queued
+  - sent
+  - accepted
+  - synced
+  - failed
+  - retry_required
+  - rejected
+idempotency:
+  strategy: marketing_submission_{local_id}
+retry_policy:
+  max_attempts: 3
+  transition_after_max: retry_required
+payload_contract:
+  event_version: "1.0"
+  required_blocks:
+    - event_metadata
+    - person
+    - company
+    - request
+    - consent
