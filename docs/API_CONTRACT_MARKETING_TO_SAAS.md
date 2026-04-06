@@ -217,116 +217,139 @@ Chaque événement envoyé vers le SaaS doit utiliser une structure stable.
     "marketing_opt_in": false
   }
 }
-7. Champs minimums communs recommandés
-7.1 Personne
-first_name
-last_name
-full_name
-email
-phone
-7.2 Entreprise
-company_name
-company_website
-company_industry
-7.3 Demande
-service_type
-request_type
-description
-budget_range
-timeline
-7.4 Métadonnées
-source_url
-page_title
-referrer
-language
-utm_source
-utm_medium
-utm_campaign
-utm_term
-utm_content
-7.5 Consentement
-privacy_policy_accepted
-marketing_opt_in
-8. Champs spécifiques par formulaire
-8.1 Contact général
-service_interest
-message
-8.2 Demande de devis
-project_type
-budget_range
-deadline_preference
-maintenance_needed
-hosting_needed
-8.3 Brief site web
-website_type
-business_activity
-goals
-estimated_pages
-languages_needed
-inspirations
-requested_features
-content_ready
-budget_range
-timeline
-8.4 Brief application web
-app_type
-target_users
-required_features
-integration_needs
-reporting_needed
-notifications_needed
-client_portal_needed
-budget_range
-timeline
-8.5 Domaine / hébergement
-domain_action_type
-requested_domain
-hosting_plan_interest
-professional_email_needed
-8.6 Audit / rendez-vous
-audit_type
-preferred_slot
-preferred_channel
-8.7 Commande service
-ordered_service
-ordered_plan
-quantity
-project_notes
-preferred_start_date
-9. Endpoints logiques à prévoir
+```
+
+---
+
+# 7. Champs minimums communs recommandés
+
+## 7.1 Personne
+- first_name
+- last_name
+- full_name
+- email
+- phone
+
+## 7.2 Entreprise
+- company_name
+- company_website
+- company_industry
+
+## 7.3 Demande
+- service_type
+- request_type
+- description
+- budget_range
+- timeline
+
+## 7.4 Métadonnées
+- source_url
+- page_title
+- referrer
+- language
+- utm_source
+- utm_medium
+- utm_campaign
+- utm_term
+- utm_content
+
+## 7.5 Consentement
+- privacy_policy_accepted
+- marketing_opt_in
+
+---
+
+# 8. Champs spécifiques par formulaire
+
+## 8.1 Contact général
+- service_interest
+- message
+
+## 8.2 Demande de devis
+- project_type
+- budget_range
+- deadline_preference
+- maintenance_needed
+- hosting_needed
+
+## 8.3 Brief site web
+- website_type
+- business_activity
+- goals
+- estimated_pages
+- languages_needed
+- inspirations
+- requested_features
+- content_ready
+- budget_range
+- timeline
+
+## 8.4 Brief application web
+- app_type
+- target_users
+- required_features
+- integration_needs
+- reporting_needed
+- notifications_needed
+- client_portal_needed
+- budget_range
+- timeline
+
+## 8.5 Domaine / hébergement
+- domain_action_type
+- requested_domain
+- hosting_plan_interest
+- professional_email_needed
+
+## 8.6 Audit / rendez-vous
+- audit_type
+- preferred_slot
+- preferred_channel
+
+## 8.7 Commande service
+- ordered_service
+- ordered_plan
+- quantity
+- project_notes
+- preferred_start_date
+
+---
+
+# 9. Endpoints logiques à prévoir
 
 Les URLs réelles pourront évoluer, mais la logique suivante doit être anticipée.
 
-9.1 Réception d’événement
-
+## 9.1 Réception d’événement
 POST /api/integrations/marketing/events
 
 Rôle :
 recevoir un événement métier du site marketing.
 
-9.2 Relance / retraitement
-
+## 9.2 Relance / retraitement
 POST /api/integrations/marketing/events/replay
 
 Rôle :
 relancer un envoi échoué ou demander un retraitement.
 
-9.3 Vérification par référence locale
-
+## 9.3 Vérification par référence locale
 GET /api/integrations/marketing/events/{local_reference}
 
 Rôle :
 vérifier si un événement a déjà été reçu et à quel état.
 
-9.4 Health check
-
+## 9.4 Health check
 GET /api/integrations/marketing/health
 
 Rôle :
 vérifier la disponibilité technique de l’intégration.
 
-10. Réponses attendues du SaaS
-10.1 Réponse succès minimale recommandée
+---
+
+# 10. Réponses attendues du SaaS
+
+## 10.1 Réponse succès minimale recommandée
+
+```json
 {
   "success": true,
   "status": "accepted",
@@ -338,117 +361,131 @@ vérifier la disponibilité technique de l’intégration.
   },
   "message": "Event accepted and queued"
 }
-10.2 Réponse erreur minimale recommandée
+```
+
+## 10.2 Réponse erreur minimale recommandée
+
+```json
 {
   "success": false,
   "status": "rejected",
   "error_code": "INVALID_PAYLOAD",
   "message": "Missing required field: email"
 }
-11. Statuts d’intégration à gérer côté site marketing
+```
+
+---
+
+# 11. Statuts d’intégration à gérer côté site marketing
 
 Le site marketing doit gérer au minimum les statuts suivants :
 
-pending
-queued
-sent
-accepted
-synced
-failed
-retry_required
-rejected
-12. Journal d’intégration
+- pending
+- queued
+- sent
+- accepted
+- synced
+- failed
+- retry_required
+- rejected
+
+---
+
+# 12. Journal d’intégration
 
 Un journal d’intégration doit être consultable côté administration pour chaque soumission.
 
-Informations minimums à afficher
-identifiant local
-type d’événement
-formulaire d’origine
-date de soumission
-statut d’intégration
-nombre de tentatives
-dernière tentative
-message d’erreur si échec
-référence externe si disponible
-action de relance manuelle si autorisée
-13. Idempotency key
+## Informations minimums à afficher
+- identifiant local
+- type d’événement
+- formulaire d’origine
+- date de soumission
+- statut d’intégration
+- nombre de tentatives
+- dernière tentative
+- message d’erreur si échec
+- référence externe si disponible
+- action de relance manuelle si autorisée
+
+---
+
+# 13. Idempotency key
 
 Chaque transmission doit embarquer une clé d’idempotence stable.
 
-Recommandation
-
+## Recommandation
 Construire une clé à partir d’un identifiant local unique non réutilisable.
 
 Exemple :
-
-marketing_submission_{uuid}
+- marketing_submission_{uuid}
 
 Cette clé doit être réutilisée lors des relances de la même soumission.
 
-14. Politique de retry
-Recommandation
-1re tentative : immédiate ou quasi immédiate
-2e tentative : différée
-3e tentative : différée
-au-delà : passage en retry_required
+---
+
+# 14. Politique de retry
+
+## Recommandation
+- 1re tentative : immédiate ou quasi immédiate
+- 2e tentative : différée
+- 3e tentative : différée
+- au-delà : passage en retry_required
 
 Le détail pourra être ajusté plus tard, mais la structure doit le permettre.
 
-15. Sécurité de l’intégration
-Exigences minimales
-HTTPS obligatoire
-authentification par clé API ou token d’intégration
-rotation possible des secrets
-validation stricte des payloads
-logs des erreurs sans exposition excessive de données sensibles
-limitation de débit si nécessaire
-16. Confidentialité des données
+---
+
+# 15. Sécurité de l’intégration
+
+## Exigences minimales
+- HTTPS obligatoire
+- authentification par clé API ou token d’intégration
+- rotation possible des secrets
+- validation stricte des payloads
+- logs des erreurs sans exposition excessive de données sensibles
+- limitation de débit si nécessaire
+
+---
+
+# 16. Confidentialité des données
 
 Le contrat doit respecter une logique de minimisation :
+- ne transmettre que les données utiles
+- ne pas surcollecter
+- journaliser de manière proportionnée
+- respecter le consentement collecté sur les formulaires
 
-ne transmettre que les données utiles
-ne pas surcollecter
-journaliser de manière proportionnée
-respecter le consentement collecté sur les formulaires
-17. Comportement en cas d’indisponibilité du SaaS
+---
+
+# 17. Comportement en cas d’indisponibilité du SaaS
 
 Si le SaaS est indisponible :
+- la soumission est quand même enregistrée localement
+- l’utilisateur final reçoit un succès métier si la soumission locale est valide
+- la synchronisation passe en pending ou failed selon la stratégie retenue
+- l’admin peut consulter l’échec
+- une relance est possible plus tard
 
-la soumission est quand même enregistrée localement
-l’utilisateur final reçoit un succès métier si la soumission locale est valide
-la synchronisation passe en pending ou failed selon la stratégie retenue
-l’admin peut consulter l’échec
-une relance est possible plus tard
-18. Préparation du futur portail client
+---
+
+# 18. Préparation du futur portail client
 
 Le contrat marketing → SaaS doit aussi anticiper qu’une commande ou un brief validé pourra plus tard servir à :
-
-créer un client
-créer un projet
-générer un accès portail
-ouvrir un onboarding
+- créer un client
+- créer un projet
+- générer un accès portail
+- ouvrir un onboarding
 
 Le site marketing ne doit pas implémenter cela maintenant, mais les structures doivent éviter de bloquer cette évolution.
 
-19. Gouvernance de la vérité métier
+---
+
+# 19. Gouvernance de la vérité métier
 
 Le site marketing est la source d’entrée commerciale.
 
 Le SaaS devient la source de vérité métier une fois l’objet synchronisé et pris en charge.
 
 Cela signifie :
-
-avant synchronisation, la vérité est côté marketing pour la soumission initiale
-après synchronisation, la vérité métier bascule côté SaaS
-
-## Ce que tu fais maintenant
-
-1. Ouvre le fichier `docs/API_CONTRACT_MARKETING_TO_SAAS.md`
-2. colle **uniquement** cette version corrigée
-3. commit les modifications
-
-Message de commit possible :
-
-```text
-Fix marketing to SaaS integration contract
+- avant synchronisation, la vérité est côté marketing pour la soumission initiale
+- après synchronisation, la vérité métier bascule côté SaaS
