@@ -1,0 +1,29 @@
+version: 1
+phase: phase_1_marketing
+entities:
+  page:
+    fields: [id, slug, title, status, template, seo_title, seo_description, blocks, published_at]
+  post:
+    fields: [id, slug, title, excerpt, body, featured_media_id, categories, tags, author_id, status, published_at]
+  service:
+    fields: [id, slug, name, summary, description, cta_label, cta_url, status]
+  module:
+    fields: [id, slug, name, summary, status, availability_label]
+  case_study:
+    fields: [id, slug, title, client_name, challenge, solution, outcomes, featured_media_id, status]
+  testimonial:
+    fields: [id, person_name, role, company, quote, status]
+  faq_item:
+    fields: [id, question, answer, category, order, status]
+  menu:
+    fields: [id, name, location, items]
+  media_asset:
+    fields: [id, type, file_path, alt_text, title, caption, uploaded_at]
+  form_definition:
+    fields: [id, key, name, fields_schema, validation_schema, destination_email, integration_event]
+  submission_record:
+    fields: [local_id, event_type, form_type, source_page, source_url, submitted_at, payload_normalized, consent_flags, integration_status, retry_count, last_attempt_at, last_error_message, external_system, external_reference_id, external_reference_type]
+  integration_log:
+    fields: [id, local_submission_id, event_type, status, attempt_number, request_snapshot, response_snapshot, error_message, attempted_at]
+  site_setting:
+    fields: [id, key, value, group]
