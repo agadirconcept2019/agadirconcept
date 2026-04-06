@@ -156,6 +156,8 @@ Le site marketing est la porte d’entrée commerciale.
 
 Le SaaS devient la source de vérité métier après synchronisation des objets marketing.
 
+Dernier checkpoint avant Codex Sprint 0.
+
 ---
 
 # Prochaine action attendue
