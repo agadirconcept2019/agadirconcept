@@ -1,0 +1,56 @@
+version: 1
+collections:
+  pages:
+    source: page
+    list:
+      columns: [title, slug, template, status, updated_at]
+      filters: [status, template]
+      default_sort: { field: updated_at, direction: desc }
+    form:
+      tabs: [content, seo, publish]
+      actions: [save_draft, preview, publish, unpublish, archive]
+  posts:
+    source: post
+    list:
+      columns: [title, author_name, status, published_at, updated_at]
+      filters: [status, categories, tags]
+      default_sort: { field: updated_at, direction: desc }
+    form:
+      tabs: [content, taxonomy, seo, publish]
+      actions: [save_draft, preview, publish, schedule, archive]
+  media_library:
+    source: media_asset
+    list:
+      columns: [file_name, media_type, size_bytes, uploaded_at]
+      filters: [media_type]
+      default_sort: { field: uploaded_at, direction: desc }
+    form:
+      tabs: [metadata]
+      actions: [replace_file, save_metadata, archive]
+  menus:
+    source: menu
+    list:
+      columns: [name, location, updated_at]
+      filters: [location]
+      default_sort: { field: updated_at, direction: desc }
+    form:
+      tabs: [items]
+      actions: [save, publish]
+  reusable_blocks:
+    source: reusable_block
+    list:
+      columns: [name, block_type, status, updated_at]
+      filters: [block_type, status]
+      default_sort: { field: updated_at, direction: desc }
+    form:
+      tabs: [content, versioning]
+      actions: [save_draft, publish, archive]
+  settings:
+    source: site_setting
+    list:
+      columns: [group, key, updated_at]
+      filters: [group]
+      default_sort: { field: group, direction: asc }
+    form:
+      tabs: [value]
+      actions: [save]

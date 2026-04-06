@@ -1,0 +1,65 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "MarketingGlobalSettings",
+  "type": "object",
+  "required": ["site", "branding", "contact", "seo", "notifications", "integrations"],
+  "properties": {
+    "site": {
+      "type": "object",
+      "required": ["name", "locale_default", "timezone"],
+      "properties": {
+        "name": { "type": "string", "minLength": 2 },
+        "locale_default": { "type": "string" },
+        "timezone": { "type": "string" }
+      }
+    },
+    "branding": {
+      "type": "object",
+      "required": ["primary_color", "accent_color", "logo_path"],
+      "properties": {
+        "primary_color": { "type": "string" },
+        "accent_color": { "type": "string" },
+        "logo_path": { "type": "string" }
+      }
+    },
+    "contact": {
+      "type": "object",
+      "required": ["email", "phone"],
+      "properties": {
+        "email": { "type": "string", "format": "email" },
+        "phone": { "type": "string" }
+      }
+    },
+    "seo": {
+      "type": "object",
+      "required": ["default_title", "default_description"],
+      "properties": {
+        "default_title": { "type": "string", "minLength": 2 },
+        "default_description": { "type": "string", "minLength": 10 }
+      }
+    },
+    "notifications": {
+      "type": "object",
+      "required": ["email_provider", "from_email"],
+      "properties": {
+        "email_provider": { "type": "string", "enum": ["smtp", "api"] },
+        "from_email": { "type": "string", "format": "email" }
+      }
+    },
+    "integrations": {
+      "type": "object",
+      "required": ["saas"],
+      "properties": {
+        "saas": {
+          "type": "object",
+          "required": ["enabled", "base_url", "api_key"],
+          "properties": {
+            "enabled": { "type": "boolean" },
+            "base_url": { "type": "string" },
+            "api_key": { "type": "string" }
+          }
+        }
+      }
+    }
+  }
+}
