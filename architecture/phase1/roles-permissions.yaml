@@ -1,0 +1,37 @@
+version: 1
+roles:
+  super_admin:
+    description: Full access to all settings, content, and integration management.
+  content_admin:
+    description: Manage pages, posts, services, modules, FAQ, testimonials, case studies, menus, and media.
+  sales_admin:
+    description: Access submissions, quote requests, briefs, exports, and integration logs.
+  editor:
+    description: Create/edit content drafts with limited publish permissions and no sensitive settings access.
+permission_groups:
+  content_management:
+    - page:read
+    - page:write
+    - post:read
+    - post:write
+    - service:read
+    - service:write
+    - module:read
+    - module:write
+  media_management:
+    - media:read
+    - media:write
+  menu_management:
+    - menu:read
+    - menu:write
+  forms_and_submissions:
+    - forms:read
+    - forms:write
+    - submission:read
+    - submission:export
+  integrations:
+    - integration_log:read
+    - integration_replay:execute
+  global_settings:
+    - settings:read
+    - settings:write

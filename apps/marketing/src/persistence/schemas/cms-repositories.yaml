@@ -1,0 +1,23 @@
+version: 1
+repositories:
+  pages_repo:
+    entity: page
+    operations: [create, update, delete, list, get_by_id, get_by_slug]
+  posts_repo:
+    entity: post
+    operations: [create, update, delete, list, get_by_id, get_by_slug]
+  media_repo:
+    entity: media_asset
+    operations: [create, update, delete, list, get_by_id]
+  menus_repo:
+    entity: menu
+    operations: [create, update, delete, list, get_by_id, get_by_location]
+  reusable_blocks_repo:
+    entity: reusable_block
+    operations: [create, update, delete, list, get_by_id]
+  settings_repo:
+    entity: site_setting
+    operations: [upsert, list_by_group, get_by_key]
+boundaries:
+  - "frontend and admin must read through repositories/contracts, not direct storage access"
+  - "forms/submissions persistence stays in forms pipeline and is not mixed into CMS repositories"
