@@ -10,7 +10,7 @@
                 <article class="card">
                     <h2>{{ $service['title'] }}</h2>
                     <p>{{ $service['summary'] }}</p>
-                    <a class="btn" href="{{ route('public.service.show', ['slug' => $service['slug']]) }}">View details</a>
+
                 </article>
             @endforeach
         </div>
