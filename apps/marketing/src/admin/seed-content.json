@@ -1,0 +1,50 @@
+{
+  "pages": [
+    {
+      "title": "Accueil",
+      "slug": "accueil",
+      "template": "default",
+      "status": "draft"
+    },
+    {
+      "title": "Contact",
+      "slug": "contact",
+      "template": "default",
+      "status": "draft"
+    }
+  ],
+  "posts": [
+    {
+      "title": "Bienvenue sur Agadir Concept",
+      "slug": "bienvenue-agadir-concept",
+      "excerpt": "Présentation de notre vision Phase 1.",
+      "author_name": "Admin",
+      "status": "draft"
+    }
+  ],
+  "menus": [
+    {
+      "name": "Main navigation",
+      "location": "main",
+      "items": [
+        { "label": "Accueil", "type": "internal", "target": "/accueil" },
+        { "label": "Services", "type": "internal", "target": "/services" },
+        { "label": "Contact", "type": "internal", "target": "/contact" }
+      ]
+    }
+  ],
+  "reusable_blocks": [
+    {
+      "name": "Homepage CTA",
+      "block_type": "cta",
+      "status": "draft",
+      "version": 1,
+      "payload": {
+        "title": "Parlons de votre projet",
+        "description": "Demandez un devis personnalisé.",
+        "button_label": "Demander un devis",
+        "button_url": "/demande-devis"
+      }
+    }
+  ]
+}

@@ -1,0 +1,22 @@
+site:
+  name: Agadir Concept
+  locale_default: fr
+  timezone: UTC
+branding:
+  primary_color: "#0F172A"
+  accent_color: "#2563EB"
+  logo_path: "/media/logo.svg"
+contact:
+  email: "contact@example.com"
+  phone: "+000000000"
+seo:
+  default_title: "Agadir Concept"
+  default_description: "Agence web & applications métier"
+integrations:
+  saas:
+    enabled: false
+    base_url: ""
+    api_key: ""
+notifications:
+  email_provider: "smtp"
+  from_email: "noreply@example.com"

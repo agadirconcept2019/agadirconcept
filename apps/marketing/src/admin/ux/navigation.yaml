@@ -1,0 +1,26 @@
+version: 1
+sidebar:
+  - section: Dashboard
+    items:
+      - { key: dashboard_home, label: Home }
+  - section: Content
+    items:
+      - { key: pages, label: Pages }
+      - { key: posts, label: Articles }
+      - { key: reusable_blocks, label: Reusable Blocks }
+  - section: Media
+    items:
+      - { key: media_library, label: Media Library }
+  - section: Structure
+    items:
+      - { key: menus, label: Menus }
+  - section: Settings
+    items:
+      - { key: global_settings, label: Global Settings }
+help_panels:
+  pages: "Create and organize landing and legal pages."
+  posts: "Publish blog content with categories and tags."
+  reusable_blocks: "Reuse hero/CTA/FAQ/testimonial sections across content."
+  media_library: "Upload media and maintain metadata (alt text, title, caption)."
+  menus: "Manage navigation for main, footer, and legal menus."
+  global_settings: "Manage site identity, contact, SEO, and notification defaults."
