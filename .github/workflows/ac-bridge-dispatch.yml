@@ -75,3 +75,27 @@ jobs:
           code="$(curl -LsS -o /tmp/ac-home.html -w '%{http_code}' --max-time 30 "https://agadir-concept.com/new/?qa=${GITHUB_RUN_ID}" || true)"
           echo "Homepage HTTP status: ${code}"
           echo "Homepage bytes: $(wc -c < /tmp/ac-home.html 2>/dev/null || echo 0)"
+
+      - name: Render homepage QA PDF
+        shell: bash
+        run: |
+          set -u -o pipefail
+          CHROME="$(command -v google-chrome || command -v google-chrome-stable || command -v chromium || command -v chromium-browser || true)"
+          if [ -z "$CHROME" ]; then
+            echo "No Chromium/Chrome binary available on runner."
+            exit 0
+          fi
+          "$CHROME" --headless=new --no-sandbox --disable-gpu --hide-scrollbars --no-pdf-header-footer --print-to-pdf=/tmp/agadir-home-qa.pdf "https://agadir-concept.com/new/?visualqa=${GITHUB_RUN_ID}" || true
+          if [ -s /tmp/agadir-home-qa.pdf ]; then
+            echo "QA PDF generated: $(wc -c < /tmp/agadir-home-qa.pdf) bytes"
+          else
+            echo "QA PDF was not generated."
+          fi
+
+      - name: Upload homepage QA artifact
+        if: ${{ hashFiles('/tmp/agadir-home-qa.pdf') != '' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: agadir-home-qa-${{ github.run_id }}
+          path: /tmp/agadir-home-qa.pdf
+          retention-days: 3
