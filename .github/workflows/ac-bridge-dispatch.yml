@@ -4,6 +4,7 @@ on:
   push:
     paths:
       - '.ac-bridge/job.json'
+      - '.ac-bridge/trigger.txt'
   workflow_dispatch:
 
 permissions:
