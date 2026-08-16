@@ -32,17 +32,19 @@ jobs:
               sleep 65
             fi
           done
+          curl -LfsS --retry 3 --max-time 30 "https://agadir-concept.com/new/wp-json/wp/v2/pages?per_page=100&orderby=menu_order&order=asc&_fields=id,slug,parent,status,link,title" -o .ac-bridge/pages.json || true
           cat .ac-bridge/status.json
 
-      - name: Publish bridge status snapshot
+      - name: Publish bridge QA snapshots
         shell: bash
         run: |
           set -euo pipefail
           git config user.name "agadirconcept-bridge"
           git config user.email "actions@users.noreply.github.com"
-          git add .ac-bridge/status.json
+          git add .ac-bridge/status.json .ac-bridge/pages.json
           if git diff --cached --quiet; then
             exit 0
           fi
-          git commit -m "Update AC Bridge job status"
+          git commit -m "Update AC Bridge QA snapshots"
+          git pull --rebase origin main
           git push
