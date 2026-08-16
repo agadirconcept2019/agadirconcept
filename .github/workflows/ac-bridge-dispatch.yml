@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: read
 
 jobs:
   dispatch:
@@ -19,32 +19,41 @@ jobs:
       - name: Trigger WordPress bridge job poll
         shell: bash
         run: |
-          set -euo pipefail
+          set -u -o pipefail
           JOB_ID="$(jq -r '.job_id' .ac-bridge/job.json)"
+          : > .ac-bridge/status.json
           for attempt in 1 2 3; do
             curl -LfsS --retry 3 --max-time 30 "https://agadir-concept.com/new/?ac_bridge_job=${GITHUB_SHA}-${attempt}" -o /dev/null || true
             sleep 5
             curl -LfsS --retry 3 --max-time 30 "https://agadir-concept.com/new/wp-json/agadir-concept-test-bridge/v1/status?cb=${GITHUB_RUN_ID}-${attempt}" -o .ac-bridge/status.json || true
+
             if jq -e --arg job "$JOB_ID" '.jobs.job_id == $job and (.jobs.status == "success" or .jobs.status == "failed" or .jobs.status == "rejected")' .ac-bridge/status.json >/dev/null 2>&1; then
+              echo "Bridge job reached a terminal state on attempt ${attempt}."
               break
             fi
+
+            echo "Bridge status is not terminal JSON yet; attempt ${attempt}/3."
             if [ "$attempt" -lt 3 ]; then
               sleep 65
             fi
           done
-          curl -LfsS --retry 3 --max-time 30 "https://agadir-concept.com/new/wp-json/wp/v2/pages?per_page=100&orderby=menu_order&order=asc&_fields=id,slug,parent,status,link,title" -o .ac-bridge/pages.json || true
-          cat .ac-bridge/status.json
 
-      - name: Publish bridge QA snapshots
+          echo '--- bridge status (raw) ---'
+          cat .ac-bridge/status.json || true
+          echo
+
+          if ! jq -e --arg job "$JOB_ID" '.jobs.job_id == $job and .jobs.status == "success"' .ac-bridge/status.json >/dev/null 2>&1; then
+            echo "Bridge job did not finish successfully."
+            exit 1
+          fi
+
+      - name: Verify public pages endpoint
         shell: bash
         run: |
-          set -euo pipefail
-          git config user.name "agadirconcept-bridge"
-          git config user.email "actions@users.noreply.github.com"
-          git add .ac-bridge/status.json .ac-bridge/pages.json
-          if git diff --cached --quiet; then
-            exit 0
+          set -u -o pipefail
+          curl -LfsS --retry 3 --max-time 30 "https://agadir-concept.com/new/wp-json/wp/v2/pages?per_page=100&orderby=menu_order&order=asc&_fields=id,slug,parent,status,link,title" -o /tmp/ac-pages.json || true
+          if jq -e 'type == "array"' /tmp/ac-pages.json >/dev/null 2>&1; then
+            echo "WordPress pages REST endpoint is valid JSON."
+          else
+            echo "WordPress pages REST endpoint is currently unavailable or invalid."
           fi
-          git commit -m "Update AC Bridge QA snapshots"
-          git pull --rebase origin main
-          git push
