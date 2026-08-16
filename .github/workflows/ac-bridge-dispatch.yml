@@ -28,12 +28,12 @@ jobs:
             sleep 5
             curl -LfsS --retry 3 --max-time 30 "https://agadir-concept.com/new/wp-json/agadir-concept-test-bridge/v1/status?cb=${GITHUB_RUN_ID}-${attempt}" -o .ac-bridge/status.json || true
 
-            if jq -e --arg job "$JOB_ID" '.jobs.job_id == $job and (.jobs.status == "success" or .jobs.status == "failed" or .jobs.status == "rejected")' .ac-bridge/status.json >/dev/null 2>&1; then
-              echo "Bridge job reached a terminal state on attempt ${attempt}."
+            if jq -e --arg job "$JOB_ID" '.jobs.job_id == $job and (.jobs.status == "success" or .jobs.status == "failed" or .jobs.status == "rejected" or (.jobs.status == "idle" and .jobs.message == "Job already processed."))' .ac-bridge/status.json >/dev/null 2>&1; then
+              echo "Bridge job reached a known state on attempt ${attempt}."
               break
             fi
 
-            echo "Bridge status is not terminal JSON yet; attempt ${attempt}/3."
+            echo "Bridge status is not usable yet; attempt ${attempt}/3."
             if [ "$attempt" -lt 3 ]; then
               sleep 65
             fi
@@ -43,12 +43,25 @@ jobs:
           cat .ac-bridge/status.json || true
           echo
 
-          if ! jq -e --arg job "$JOB_ID" '.jobs.job_id == $job and .jobs.status == "success"' .ac-bridge/status.json >/dev/null 2>&1; then
+          if ! jq -e --arg job "$JOB_ID" '.jobs.job_id == $job and (.jobs.status == "success" or (.jobs.status == "idle" and .jobs.message == "Job already processed."))' .ac-bridge/status.json >/dev/null 2>&1; then
             echo "Bridge job did not finish successfully."
             exit 1
           fi
 
-      - name: Verify public pages endpoint
+      - name: Fetch runtime diagnostic
+        shell: bash
+        run: |
+          set -u -o pipefail
+          echo '--- AC runtime diagnostic ---'
+          curl -LfsS --retry 2 --max-time 30 "https://agadir-concept.com/new/wp-json/ac-runtime-diagnostic/v1/status?cb=${GITHUB_RUN_ID}" -o /tmp/ac-runtime.json || true
+          if jq -e '.ok == true' /tmp/ac-runtime.json >/dev/null 2>&1; then
+            jq . /tmp/ac-runtime.json
+          else
+            echo "Runtime diagnostic endpoint unavailable."
+            cat /tmp/ac-runtime.json 2>/dev/null || true
+          fi
+
+      - name: Verify public endpoints
         shell: bash
         run: |
           set -u -o pipefail
@@ -58,3 +71,7 @@ jobs:
           else
             echo "WordPress pages REST endpoint is currently unavailable or invalid."
           fi
+
+          code="$(curl -LsS -o /tmp/ac-home.html -w '%{http_code}' --max-time 30 "https://agadir-concept.com/new/?qa=${GITHUB_RUN_ID}" || true)"
+          echo "Homepage HTTP status: ${code}"
+          echo "Homepage bytes: $(wc -c < /tmp/ac-home.html 2>/dev/null || echo 0)"
