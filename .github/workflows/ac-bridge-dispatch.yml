@@ -21,12 +21,15 @@ jobs:
         run: |
           set -euo pipefail
           JOB_ID="$(jq -r '.job_id' .ac-bridge/job.json)"
-          for attempt in 1 2 3 4; do
+          for attempt in 1 2 3; do
             curl -LfsS --retry 3 --max-time 30 "https://agadir-concept.com/new/?ac_bridge_job=${GITHUB_SHA}-${attempt}" -o /dev/null || true
-            sleep 20
+            sleep 5
             curl -LfsS --retry 3 --max-time 30 "https://agadir-concept.com/new/wp-json/agadir-concept-test-bridge/v1/status?cb=${GITHUB_RUN_ID}-${attempt}" -o .ac-bridge/status.json || true
             if jq -e --arg job "$JOB_ID" '.jobs.job_id == $job and (.jobs.status == "success" or .jobs.status == "failed" or .jobs.status == "rejected")' .ac-bridge/status.json >/dev/null 2>&1; then
               break
+            fi
+            if [ "$attempt" -lt 3 ]; then
+              sleep 65
             fi
           done
           cat .ac-bridge/status.json
